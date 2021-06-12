@@ -24,3 +24,4 @@ Example links to purchase components in Lebanon, if you know better place - let 
 
 ![Components on table](https://raw.githubusercontent.com/nuclearcat/fridgemonlb/main/images/required_parts.jpg "Components on table")
 
+[Hardware assembly steps](ASSEMBLY.md)
