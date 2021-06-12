@@ -5,6 +5,7 @@
 | ------------------       | -------|
 | Complete TODO            | []     |
 | Indicate status by LED   | []     |
+| Device setup by web/AP   | []     |
 | Multiple devices         | []     |
 | Nice admin UI            | []     |
 | README                   | []     |
