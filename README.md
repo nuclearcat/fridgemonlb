@@ -18,3 +18,6 @@ Example links to purchase components in Lebanon, if you know better place - let 
 3. https://www.katranji.com/Item/TRAVEL-CHARGE-APPLE-ORG
 4. https://www.katranji.com/Item/SENSOR-TEMPERATURE-DS18B20 (Attention, ask seller about polarity, as wires color different from seller to seller.)
 5. https://www.katranji.com/Item/Resistor-Carbon-0-5W-5%25-4K7 (This one a bit bigger, but will work. You can buy a kit also, with smaller resistors of different values)
+
+![Components on table](https://raw.githubusercontent.com/nuclearcat/fridgemonlb/main/images/required_parts.jpg "Components on table")
+
