@@ -11,6 +11,9 @@
 1. Black(Ground) to D23
 2. Red(Power or VCC) to D22
 3. Yellow (DATA) to D18
+
+Place heatshrink on soldering joints or use insulation tape.
+
 ![Step 4](https://raw.githubusercontent.com/nuclearcat/fridgemonlb/main/images/step4.jpg "Step 4")
 
 ## Make sure thin wires to sensor wires are accurate and insulated by heatshrink or electrical tape.
