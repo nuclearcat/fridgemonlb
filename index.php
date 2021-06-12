@@ -66,11 +66,18 @@ if ($_GET{'key'} === $key_device) {
 	exit(0);
 }
 
-if ($_GET{'key'} === $key_poller) {
-	$content = file_get_contents($data_filename);
-	header('Content-Type: application/json');
-	echo ($content);
-	exit(0);
+if (isset($_GET{'key'})) {
+	if ($_GET{'key'} === $key_poller) {
+		$content = file_get_contents($data_filename);
+		header('Content-Type: application/json');
+		echo ($content);
+		exit(0);
+	} else {
+		header('Content-Type: application/json');
+		$arr["auth"] = "fail";
+		echo json_encode($arr);
+		exit(0);
+	}
 }
 
 if ($_GET{'admin'} === $unique_id) {
@@ -95,19 +102,43 @@ if ($_GET{'admin'} === $unique_id) {
     text-align: center;
 }
 </style>
-<div class="is-center">
+<div class="is-center" id="content">
         <h2 class="content-head is-center">Management interface</h2>
 		<form class="pure-form">
     		<fieldset>
-        		<input type="password" placeholder="Poller key(password)" />
+        		<input type="password" id="password" placeholder="Poller key(password)" />
         		<button type="submit" id="signin" class="pure-button pure-button-primary">Sign in</button>
     		</fieldset>
 		</form>
-
+		<div id="msg"></div>
 </div>
 <script>
+var password = "";
+
+function poll_data(data) {
+		$("#content").html('<table class="pure-table" id="datatable"><thead><tr><th>Name</th><th>Value</th></tr></thead><tbody>');
+		$.each( data, function( key, value ) {
+			$("#datatable").append('<tr><td>'+key+'</td><td>'+value+'</td></tr>');
+		});
+}
+
 $( "#signin" ).click(function(event) {
 	event.preventDefault();
+	$("#msg").html("Please wait...");
+	password = $("#password").val();
+	//Verify if password correct and setup loop if yes
+	$.get( "?key="+password, function(data){
+		if (data.auth === "fail") {
+			$("#msg").html("Auth fail");
+			console.log("Auth fail");
+		} else {
+			setInterval(function() {
+        		//$self.fadeOut(1000);
+        		//anim_loop((index + 1) % $elements.length);
+        		$.get( "?key="+password, poll_data);
+    		}, 5000);
+		}
+	});
   	//alert( "Handler for .click() called." );
 });
 </script>
