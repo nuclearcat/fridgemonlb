@@ -8,6 +8,10 @@ Main components used in this design are:
 4. DS18B20 waterproof sensor with wires
 5. 4.7k resistor
 
+Required tools:
+1. Stationery knife
+2. Soldering iron with accessories (soldering wire and flux)
+
 Example links to purchase in Lebanon, if you know better place - let me know:
 1. https://www.katranji.com/Item/WIRE-SIGNAL-0-25MM-BROWN
 2. https://www.katranji.com/Item/ARDUINO-WIFI-BT-ESP32-WROOM (Most similar boards are ok. Highly preferable if your board have "User LED" to indicate current status. )
