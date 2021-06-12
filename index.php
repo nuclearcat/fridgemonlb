@@ -63,7 +63,10 @@ if ($_GET{'key'} === $key_device) {
 }
 
 if ($_GET{'key'} === $key_poller) {
-
+	$content = file_get_contents('.htprivate_iot_cfg.txt');
+	header('Content-Type: application/json');
+	echo ($content);
+	exit(0);
 }
 
 if ($_GET{'admin'} === $unique_id) {
