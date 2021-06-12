@@ -1,6 +1,9 @@
 # Refrigeration equipment ultracheap IoT monitoring
 
-Main components used in this design are:
+The main goal of this project is to create a cheap solution that will allow you to control the safety of food in refrigerators and freezers.
+
+
+## Main components used in this design are:
 
 1. (Optional) Thin wires to pass refrigerator seal
 2. ESP32 development board
