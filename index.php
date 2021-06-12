@@ -72,3 +72,34 @@ if ($_GET{'key'} === $key_poller) {
 if ($_GET{'admin'} === $unique_id) {
 	exit(0);
 }
+?>
+<!doctype html>
+<html>
+<head>
+	<meta name="robots" content="noindex" />
+	<meta name="googlebot" content="noindex" />
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<!-- Very cool CSS framework: https://purecss.io/ -->
+	<link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css" integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aehk5" crossorigin="anonymous">
+	<title>Management interface</title>
+</head>
+<body>
+<style>
+.is-center {
+    text-align: center;
+}
+</style>
+<div class="is-center">
+
+        <h2 class="content-head is-center">Management interface</h2>
+		<form class="pure-form">
+    		<fieldset>
+        		<input type="password" placeholder="Poller key(password)" />
+        		<button type="submit" class="pure-button pure-button-primary">Sign in</button>
+    		</fieldset>
+		</form>
+
+</div>
+</body>
+</html>
