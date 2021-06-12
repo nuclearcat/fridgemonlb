@@ -1,3 +1,11 @@
+/*
+ * (c)Denys Fedoryshchenko
+ * Distribution license: MIT
+ * License details: https://en.wikipedia.org/wiki/MIT_License
+ * Contact email: nuclearcat@nuclearcat.com
+ * 
+ */
+
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <WiFi.h>
@@ -9,13 +17,14 @@
 #include <esp_pm.h>
 #include <esp_wifi.h>
 #include <esp_wifi_types.h>
-#include "fridgemonlb_example.h"
+// Please copy fridgemonlb_example.h to fridgemonlb.h and edit it
+#include "fridgemonlb.h"
 
 #define FW_VERSION 9
 #define UPDATE_INTERVAL 30000
 
 // GPIO where the DS18B20 is connected to
-const int oneWireBus = 12;
+const int oneWireBus = 18;
 
 // Setup a oneWire instance to communicate with any OneWire devices
 OneWire oneWire(oneWireBus);
@@ -158,7 +167,7 @@ int sendtemp(float temp) {
       //Serial.print(http.getString());
       DynamicJsonDocument doc(2048);
       deserializeJson(doc, http.getStream());
-      Serial.println("DEBUG");
+
       if (doc["upgrade"].as<unsigned int>() == 1) {
           updating = 1;
           HttpsOTA.onHttpEvent(HttpEvent);
@@ -176,8 +185,12 @@ void setup() {
   // Start the Serial Monitor for debug
   Serial.begin(115200);
   // Give power for sensor
-  pinMode(14, OUTPUT);
-  digitalWrite(14, HIGH);
+  pinMode(22, OUTPUT);
+  digitalWrite(22, HIGH);
+  
+  // Ground of sensor
+  pinMode(23, OUTPUT);  
+  digitalWrite(23, LOW);
   // Start the DS18B20 sensor
   sensors.begin();
   WiFi.onEvent(WiFiEvent);
@@ -214,6 +227,9 @@ void loop() {
   if (millis() > last_post && sta_ok) {
     sensors.requestTemperatures();
     float temperatureC = sensors.getTempCByIndex(0);
+    Serial.print("Sensor temperature: ");
+    Serial.print(temperatureC);
+    Serial.println("C");
     // Ignore invalid temperature
     if (temperatureC > -100 || badtemp > 4) {
       sendtemp(temperatureC);
