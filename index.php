@@ -1,5 +1,7 @@
 <?php
 // TODO: generate unique filename for storing db and configuration based on file path
+$seed_key_filename = '.htprivate_iot_cfg.txt';
+$data_filename = '.htprivate_iot_db.txt';
 
 // This ID will generate keys for device and polling
 function generateRandomString($length = 20) {
@@ -12,7 +14,9 @@ function generateRandomString($length = 20) {
 	return $randomString;
 }
 
-if (!file_exists('.htprivate_iot_cfg.txt')) {
+// TBD/FIXME: Make cron-alike function on each php call, so we can notify user if monitoring hardware is off
+
+if (!file_exists($seed_key_filename)) {
 	$unique_id = generateRandomString();
 	$key_device = md5("devicesalt" . $unique_id);
 	$key_poller = md5("pollersalt" . $unique_id);
@@ -36,12 +40,12 @@ if (!file_exists('.htprivate_iot_cfg.txt')) {
 	echo ("// For Arduino sketch fridgemonlb.h\r\n");
 	echo ("#define IOT_URL \"" . $url . "?key=" . $key_device . "\"\r\n");
 	echo ("\r\n");
-	if (file_put_contents('.htprivate_iot_cfg.txt', $unique_id) == false) {
+	if (file_put_contents($seed_key_filename, $unique_id) == false) {
 		die("<b>Error writing configuration. Please check permissions of directory on webserver!</b>");
 	}
 	exit(0);
 } else {
-	$unique_id = file_get_contents('.htprivate_iot_cfg.txt');
+	$unique_id = file_get_contents($seed_key_filename);
 }
 
 $key_device = md5("devicesalt" . $unique_id);
@@ -50,7 +54,7 @@ $key_poller = md5("pollersalt" . $unique_id);
 if ($_GET{'key'} === $key_device) {
 	$content = file_get_contents('php://input');
 	$data = json_decode($content, true);
-	$fh = fopen('.htprivate_iot_db.txt', 'w');
+	$fh = fopen($data_filename, 'w');
 	fwrite($fh, print_r($content, true));
 	fclose($fh);
 	$dataresponse = array();
@@ -63,7 +67,7 @@ if ($_GET{'key'} === $key_device) {
 }
 
 if ($_GET{'key'} === $key_poller) {
-	$content = file_get_contents('.htprivate_iot_cfg.txt');
+	$content = file_get_contents($data_filename);
 	header('Content-Type: application/json');
 	echo ($content);
 	exit(0);
@@ -83,6 +87,7 @@ if ($_GET{'admin'} === $unique_id) {
 	<!-- Very cool CSS framework: https://purecss.io/ -->
 	<link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css" integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aehk5" crossorigin="anonymous">
 	<title>Management interface</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"><</script>
 </head>
 <body>
 <style>
@@ -91,15 +96,20 @@ if ($_GET{'admin'} === $unique_id) {
 }
 </style>
 <div class="is-center">
-
         <h2 class="content-head is-center">Management interface</h2>
 		<form class="pure-form">
     		<fieldset>
         		<input type="password" placeholder="Poller key(password)" />
-        		<button type="submit" class="pure-button pure-button-primary">Sign in</button>
+        		<button type="submit" id="signin" class="pure-button pure-button-primary">Sign in</button>
     		</fieldset>
 		</form>
 
 </div>
+<script>
+$( "#signin" ).click(function(event) {
+	event.preventDefault();
+  	//alert( "Handler for .click() called." );
+});
+</script>
 </body>
 </html>
