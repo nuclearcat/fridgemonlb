@@ -114,22 +114,50 @@ if ($_GET{'admin'} === $unique_id) {
 		</form>
 		<div id="msg"></div>
 </div>
-<div id="dialog">Work in progress...</div>
+<div id="dialog">
+<p id="phdr"></p>
+<input type="text" id="alertvalue"/>
+<input type="hidden" id="param" value=""/>
+
+</div>
 <script>
 var password = localStorage.getItem("pass_iot");
 
+$('#nicealert')
+  .button()
+  .css({
+          'font' : 'inherit',
+         'color' : 'inherit',
+    'text-align' : 'left',
+       'outline' : 'none',
+        'cursor' : 'text'
+});
+
+
 function poll_data(data) {
 		$("#content").html('<table class="pure-table" id="datatable"><thead><tr><th>Name</th><th>Value</th><th>Settings</th></tr></thead><tbody>');
+		var button_code = '<button class="ui-button ui-widget ui-corner-all setalert">Set alert</button>';
 		$.each( data, function( key, value ) {
-			$("#datatable").append('<tr><td>'+key+'</td><td>'+value+'</td><td><button class="ui-button ui-widget ui-corner-all setalert">Set alert</button></td></tr>');
+			if (key.startsWith("temp")) {
+				$("#datatable").append('<tr><td>'+key+'</td><td>'+value+'</td><td>'+button_code+'</td></tr>');
+			} else {
+				$("#datatable").append('<tr><td>'+key+'</td><td>'+value+'</td><td></td></tr>');
+			}
 		});
 		$( ".setalert" ).click(function(event) {
+			var p_name = $(this).closest('td').prev('td').prev('td').text();
+			$("#phdr").text('Set alert value to '+p_name+':');
+			$("#param").val(p_name);
+			$("#alertvalue").val('');
 			$( "#dialog" ).dialog({
   				dialogClass: "no-close",
   				buttons: [
     				{
-      					text: "OK",
+      					text: "Set",
       					click: function() {
+      						var p_name = $("#param").val();
+      						var p_val = $("#alertvalue").val();
+      						$.get( "?op=set&alert="+p_name+"&val="+p_val);
         					$( this ).dialog( "close" );
       					}
     				}
@@ -144,6 +172,7 @@ function try_login() {
 		if (data.auth === "fail") {
 			$("#msg").html("Auth fail");
 			console.log("Auth fail");
+			localStorage.clear();
 		} else {
 			localStorage.setItem("pass_iot", password);
 			setInterval(function() {
