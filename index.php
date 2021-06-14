@@ -93,8 +93,10 @@ if ($_GET{'admin'} === $unique_id) {
 	<meta name="viewport" content="width=device-width">
 	<!-- Very cool CSS framework: https://purecss.io/ -->
 	<link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css" integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aehk5" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<title>Management interface</title>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"><</script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 </head>
 <body>
 <style>
@@ -112,26 +114,38 @@ if ($_GET{'admin'} === $unique_id) {
 		</form>
 		<div id="msg"></div>
 </div>
+<div id="dialog">Work in progress...</div>
 <script>
-var password = "";
+var password = localStorage.getItem("pass_iot");
 
 function poll_data(data) {
-		$("#content").html('<table class="pure-table" id="datatable"><thead><tr><th>Name</th><th>Value</th></tr></thead><tbody>');
+		$("#content").html('<table class="pure-table" id="datatable"><thead><tr><th>Name</th><th>Value</th><th>Settings</th></tr></thead><tbody>');
 		$.each( data, function( key, value ) {
-			$("#datatable").append('<tr><td>'+key+'</td><td>'+value+'</td></tr>');
+			$("#datatable").append('<tr><td>'+key+'</td><td>'+value+'</td><td><button class="ui-button ui-widget ui-corner-all setalert">Set alert</button></td></tr>');
+		});
+		$( ".setalert" ).click(function(event) {
+			$( "#dialog" ).dialog({
+  				dialogClass: "no-close",
+  				buttons: [
+    				{
+      					text: "OK",
+      					click: function() {
+        					$( this ).dialog( "close" );
+      					}
+    				}
+  				]
+			});
 		});
 }
 
-$( "#signin" ).click(function(event) {
-	event.preventDefault();
+function try_login() {
 	$("#msg").html("Please wait...");
-	password = $("#password").val();
-	//Verify if password correct and setup loop if yes
 	$.get( "?key="+password, function(data){
 		if (data.auth === "fail") {
 			$("#msg").html("Auth fail");
 			console.log("Auth fail");
 		} else {
+			localStorage.setItem("pass_iot", password);
 			setInterval(function() {
         		//$self.fadeOut(1000);
         		//anim_loop((index + 1) % $elements.length);
@@ -139,6 +153,17 @@ $( "#signin" ).click(function(event) {
     		}, 5000);
 		}
 	});
+}
+
+if (password.length > 0) {
+	try_login();
+}
+
+$( "#signin" ).click(function(event) {
+	event.preventDefault();
+
+	password = $("#password").val();
+	//Verify if password correct and setup loop if yes
   	//alert( "Handler for .click() called." );
 });
 </script>
