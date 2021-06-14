@@ -32,9 +32,7 @@ if (!file_exists($seed_key_filename)) {
 	} else {
 		$url = "http://";
 	}
-	// Append the host(domain name, ip) to the URL.
 	$url .= $_SERVER['HTTP_HOST'];
-	// Append the requested resource location to the URL
 	$url .= $_SERVER['REQUEST_URI'];
 
 	echo ("// For Arduino sketch fridgemonlb.h\r\n");
@@ -118,9 +116,10 @@ if ($_GET{'admin'} === $unique_id) {
 <p id="phdr"></p>
 <input type="text" id="alertvalue"/>
 <input type="hidden" id="param" value=""/>
-
 </div>
+<button id="settings">Settings</button>
 <script>
+// TODO: localSession vs localStorage?
 var password = localStorage.getItem("pass_iot");
 
 $('#nicealert')
@@ -157,7 +156,7 @@ function poll_data(data) {
       					click: function() {
       						var p_name = $("#param").val();
       						var p_val = $("#alertvalue").val();
-      						$.get( "?op=set&alert="+p_name+"&val="+p_val);
+      						$.get( "?key="+password+"&op=set&alert="+p_name+"&val="+p_val);
         					$( this ).dialog( "close" );
       					}
     				}
@@ -175,6 +174,7 @@ function try_login() {
 			localStorage.clear();
 		} else {
 			localStorage.setItem("pass_iot", password);
+			$("#settings").show();
 			setInterval(function() {
         		//$self.fadeOut(1000);
         		//anim_loop((index + 1) % $elements.length);
@@ -185,18 +185,21 @@ function try_login() {
 	});
 }
 
-if (password.length > 0) {
+if (password != null && password.length > 0) {
 	try_login();
 }
 $("#dialog").hide();
+$( "#settings" ).button().click(function(event) {
+	alert('Settings');
+}).hide();
 
 $( "#signin" ).click(function(event) {
 	event.preventDefault();
-
 	password = $("#password").val();
-	//Verify if password correct and setup loop if yes
-  	//alert( "Handler for .click() called." );
+	try_login();
 });
 </script>
+<br/>
+Opensource: <A HREF="https://github.com/nuclearcat/fridgemonlb">https://github.com/nuclearcat/fridgemonlb</A><BR/>
 </body>
 </html>
