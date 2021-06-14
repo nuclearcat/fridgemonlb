@@ -151,6 +151,7 @@ function try_login() {
         		//anim_loop((index + 1) % $elements.length);
         		$.get( "?key="+password, poll_data);
     		}, 5000);
+    		$.get( "?key="+password, poll_data);
 		}
 	});
 }
@@ -158,6 +159,7 @@ function try_login() {
 if (password.length > 0) {
 	try_login();
 }
+$("#dialog").hide();
 
 $( "#signin" ).click(function(event) {
 	event.preventDefault();
